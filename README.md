@@ -142,9 +142,9 @@ heroku login
 
 
 2. Create a new Heroku application:
-
+```bash
 heroku create wfhome-app
-
+```
 
 3. Add a Procfile in the root directory with the following content:
 ```bash
@@ -185,9 +185,9 @@ DigitalOcean
 
 
 2. SSH into your Droplet:
-
+```bash
 ssh root@your_droplet_ip
-
+```
 
 3. Install Docker and Docker Compose on the server:
 
