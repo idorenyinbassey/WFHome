@@ -252,6 +252,6 @@ This project is licensed under the MIT License.
 
 ---
 
-Wfhome © 2024 by Preforio ltd. All rights reserved.
+Wfhome © 2024 by Predorio LTD. All rights reserved.
 
 Make sure to add Docker-related files, such as a `Dockerfile` and optionally a `docker-compose.yml`, to your project if you plan on using Docker for deployment. Also, replace `yourusername` and `wfhome-app` with your actual GitHub username and desired application names.
