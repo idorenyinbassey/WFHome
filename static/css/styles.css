@@ -35,16 +35,53 @@ form {
     margin: 0 auto;
 }
 
-form div {
+.form-group {
+    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
 }
 
-input[type="text"], input[type="password"], textarea, select {
+input[type="text"], input[type="password"], textarea, select, .form-control {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.text-danger {
+    color: #d9534f;
+}
+
+/* Button styling */
+.btn {
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
 }
 
 button {
@@ -60,7 +97,91 @@ button:hover {
     background-color: #218838;
 }
 
-/* Dashboard task list */
+/* Profile picture styling */
+.profile-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profile-picture img {
+    border-radius: 50%;
+    border: 2px solid #ccc;
+}
+
+/* Dashboard and task styling */
+.dashboard-container {
+    padding: 20px;
+}
+
+.welcome-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.alert-container {
+    margin-bottom: 20px;
+}
+
+.task-form-container {
+    margin-bottom: 30px;
+    background-color: #f0f8ff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-submit-btn {
+    margin-top: 10px;
+}
+
+.tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.task-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.task-card h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.task-detail {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.task-meta p {
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #666;
+}
+
+.task-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.countdown-timer {
+    font-weight: bold;
+    color: #d9534f;
+    margin-top: 5px;
+}
+
 ul {
     list-style: none;
     padding: 0;
@@ -71,4 +192,38 @@ ul li {
     padding: 10px;
     margin-bottom: 5px;
     border-left: 5px solid #007bff;
+}
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+.relative-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.form-check {
+    margin-bottom: 15px;
+}
+
+.btn {
+    margin-top: 10px;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
 }

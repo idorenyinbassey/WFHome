@@ -3,6 +3,41 @@
 {% block title %}Welcome{% endblock %}
 
 {% block content %}
-<h2>Welcome to the Work from Home Management System!</h2>
-<p>Please log in or register to start working remotely.</p>
+<div class="hero-section text-center">
+    <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" alt="Work from Home" class="img-fluid mt-4" style="max-width: 100%; height: auto; border-radius: 8px;">
+</div>
+
+<div class="container text-center mt-5">
+    <h2>Welcome to the Work from Home Management System!</h2>
+    <p class="lead mt-3">Manage your remote work efficiently and stay connected. Please log in or register to start working remotely.</p>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg mx-2">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-success btn-lg mx-2">Register</a>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #e0f7fa, #ffffff);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .hero-section img {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+    }
+
+    h2 {
+        color: #00796b;
+    }
+
+    .lead {
+        color: #004d40;
+    }
+</style>
 {% endblock %}

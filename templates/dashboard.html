@@ -3,28 +3,154 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h2>Welcome, {{ user.username }}</h2>
+<div class="dashboard-container">
+    <div class="welcome-section">
+        {% if user.profile_picture %}
+            <img src="{{ url_for('static', filename='uploads/' ~ user.profile_picture) }}" alt="Profile Picture" class="profile-picture">
+        {% else %}
+            <img src="{{ url_for('static', filename='default-profile.png') }}" alt="Default Profile Picture" class="profile-picture">
+        {% endif %}
+        <h2>Welcome, {{ user.username }}</h2>
+    </div>
 
-<h3>Your Tasks</h3>
-<ul>
-    {% for task in tasks %}
-    <li>{{ task.title }} - {{ task.description }}</li>
-    {% endfor %}
-</ul>
+    <!-- Flash messages section -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="alert-container">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
-<h3>Create a New Task</h3>
-<form method="POST" class="form">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        {{ form.task_title.label }} 
-        {{ form.task_title(class="form-control") }}
+    <!-- Task creation form -->
+    <div class="task-form-container">
+        <h3>Create a New Task</h3>
+        <p class="instructions">Fill out the form to create a new task. Ensure that start and end times are set correctly and the due date is not in the past.</p>
+        <p class="instructions"><strong>Note:</strong> If you wish to manually mark a task as completed, leave the "End Time" field blank. If an "End Time" is set, an automatic countdown will display, leading up to task completion.</p>
+        <form method="POST" action="{{ url_for('tasks.dashboard') }}" class="task-form">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.task_title.label(class="form-label") }} 
+                {{ form.task_title(class="form-control") }}
+                {% if form.task_title.errors %}
+                    <small class="text-danger">{{ form.task_title.errors[0] }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.task_description.label(class="form-label") }} 
+                {{ form.task_description(class="form-control") }}
+                {% if form.task_description.errors %}
+                    <small class="text-danger">{{ form.task_description.errors[0] }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.priority.label(class="form-label") }} 
+                {{ form.priority(class="form-control") }}
+                {% if form.priority.errors %}
+                    <small class="text-danger">{{ form.priority.errors[0] }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.due_date.label(class="form-label") }} 
+                {{ form.due_date(class="form-control") }}
+                {% if form.due_date.errors %}
+                    <small class="text-danger">{{ form.due_date.errors[0] }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.start_time.label(class="form-label") }}
+                <input type="datetime-local" name="start_time" class="form-control" value="{{ form.start_time.data|datetimeformat }}">
+                {% if form.start_time.errors %}
+                    <small class="text-danger">{{ form.start_time.errors[0] }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.end_time.label(class="form-label") }}
+                <input type="datetime-local" name="end_time" class="form-control" value="{{ form.end_time.data|datetimeformat }}">
+                {% if form.end_time.errors %}
+                    <small class="text-danger">{{ form.end_time.errors[0] }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.task_type.label(class="form-label") }} 
+                {{ form.task_type(class="form-control") }}
+                {% if form.task_type.errors %}
+                    <small class="text-danger">{{ form.task_type.errors[0] }}</small>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.assignee.label(class="form-label") }} 
+                {{ form.assignee(class="form-control") }}
+                {% if form.assignee.errors %}
+                    <small class="text-danger">{{ form.assignee.errors[0] }}</small>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary form-submit-btn">{{ form.submit.label }}</button>
+        </form>
     </div>
-    <div class="form-group">
-        {{ form.task_description.label }}
-        {{ form.task_description(class="form-control") }}
+
+    <!-- Display user tasks -->
+    <h3>Your Tasks</h3>
+    <div class="tasks-list">
+        {% for task in tasks %}
+            <div class="task-card">
+                <h4>{{ task.title }}</h4>
+                <p class="task-detail">{{ task.description }}</p>
+                <div class="task-meta">
+                    <p><strong>Priority:</strong> {{ task.priority }}</p>
+                    <p><strong>Due Date:</strong> {{ task.due_date.strftime('%Y-%m-%d') if task.due_date else 'No due date set' }}</p>
+                    <p><strong>Start Time:</strong> {{ task.start_time.strftime('%Y-%m-%d %H:%M') if task.start_time else 'Not started yet' }}</p>
+                    <p><strong>End Time:</strong> {{ task.end_time.strftime('%Y-%m-%d %H:%M') if task.end_time else 'Not completed yet' }}</p>
+                    <p><strong>Task Type:</strong> {{ task.task_type }}</p>
+                    <p><strong>Assignee:</strong> {{ task.assignee.username if task.assignee else 'None' }}</p>
+                </div>
+                <div class="task-actions">
+                    <a href="{{ url_for('tasks.edit_task', task_id=task.id) }}" class="btn btn-warning">Edit</a>
+                    <form method="POST" action="{{ url_for('tasks.delete_task', task_id=task.id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
+                    </form>
+                    {% if not task.end_time %}
+                        <form method="POST" action="{{ url_for('tasks.end_task', task_id=task.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to mark this task as completed?');">End</button>
+                        </form>
+                    {% else %}
+                        <p id="countdown-{{ task.id }}" class="countdown-timer" data-end-time="{{ task.end_time.isoformat() }}">Calculating time left...</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    <div class="form-group">
-        {{ form.submit(class="btn btn-primary") }}
-    </div>
-</form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var taskTimers = document.querySelectorAll('[id^="countdown-"]');
+
+        taskTimers.forEach(function(countdownElement) {
+            var endTime = new Date(countdownElement.getAttribute("data-end-time")).getTime();
+
+            function updateCountdown() {
+                var now = new Date().getTime();
+                var timeRemaining = endTime - now;
+
+                if (timeRemaining > 0) {
+                    var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                    countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+                } else {
+                    countdownElement.innerHTML = "Task time expired!";
+                    clearInterval(timer);
+                }
+            }
+
+            var timer = setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial call to set the countdown immediately
+        });
+    });
+</script>
 {% endblock %}

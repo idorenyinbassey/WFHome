@@ -4,8 +4,20 @@
 
 {% block content %}
 <h2>Login</h2>
+
+<!-- Flash messages for login -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <div class="alert alert-dismissible fade show" role="alert">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <form method="POST" class="form">
-    {{ form.hidden_tag() }}
+    {{ form.hidden_tag() }}  <!-- CSRF token -->
     <div class="form-group">
         {{ form.login_identifier.label(class="form-label") }} 
         {{ form.login_identifier(class="form-control") }}
